@@ -1,6 +1,5 @@
 import express from "express";
-
-import exphbs from "express-handlebars";
+let exphbs = require ("express-handlebars");
 
 //import indexRoutes from "./routes/index.routes";
 import path from "path";
@@ -9,19 +8,11 @@ import methodOverride from "method-override";
 /*import flash from "connect-flash";
 import session from "express-session";*/
 
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 // Initializacion
 const app = express();
 
 // Settings
-app.listen(app.get("port"), () => {
-    console.log("en el puerto:", app.get("port"))
-});
-app.set("port", process.env.PORT || 3000);
-
+app.set("port", process.env.PORT || 4000);
 app.set("views", path.join(__dirname, "views"));
 app.engine(".hbs", exphbs.engine({
     layoutsDir:path.join(app.get("views"), "layouts"),
@@ -37,8 +28,12 @@ app.set("view engine", ".hbs");
 app.use(morgan("dev"));
 app.use(express.urlencoded({extended:false}));
 app.use(methodOverride("_method"));
-
-
+/*app.subscribe(session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(flash());*/
 
 
 // Global Variables  
@@ -46,7 +41,9 @@ app.use(methodOverride("_method"));
 
 // routes
 
-
+app.use(require("./routes/index.routes"));
+app.use(require("./routes/books.routes"));
+app.use(require("./routes/users.routes"));
 
 // statics files
 
